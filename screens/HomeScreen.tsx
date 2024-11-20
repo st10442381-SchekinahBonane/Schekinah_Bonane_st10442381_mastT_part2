@@ -10,10 +10,9 @@ export default function HomeScreen({ navigation, route }: HomeScreenProps) {
 
   useEffect(() => {
     if (route.params?.newItem) {
-      setMenuItems((prevItems) => [...prevItems, route.params.newItem!]); // Add the non-null assertion (!)
+      setMenuItems((prevItems) => [...prevItems, route.params.newItem!]);
     }
   }, [route.params?.newItem]);
-  
 
   return (
     <View style={styles.container}>
@@ -42,6 +41,7 @@ export default function HomeScreen({ navigation, route }: HomeScreenProps) {
         <Button
           title="Add New Dish"
           onPress={() => navigation.navigate('AddMenu')}
+          color="#2980b9"
         />
       </View>
     </View>
@@ -52,25 +52,36 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    backgroundColor: '#f7f7f7', // Subtle background color for better UI
   },
   title: {
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: 'bold',
+    textAlign: 'center',
+    color: '#2c3e50',
     marginBottom: 20,
   },
   menuCount: {
     fontSize: 18,
+    color: '#7f8c8d',
     marginVertical: 10,
+    textAlign: 'center',
   },
   menuItem: {
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    padding: 12,
+    marginVertical: 8,
+    borderWidth: 1,
+    borderColor: '#dcdcdc',
+    borderRadius: 8,
+    backgroundColor: '#fff',
   },
   itemText: {
     fontSize: 16,
+    color: '#34495e',
   },
   buttonContainer: {
     marginVertical: 20,
+    alignItems: 'center',
   },
-}); 
+});
+

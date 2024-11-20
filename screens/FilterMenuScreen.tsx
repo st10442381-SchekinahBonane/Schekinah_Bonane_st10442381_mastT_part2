@@ -10,7 +10,7 @@ const sampleMenuItems = [
   { dishName: 'Salad', description: 'Fresh salad', course: 'Starters', price: 5.99 },
   { dishName: 'Steak', description: 'Grilled steak', course: 'Mains', price: 19.99 },
   { dishName: 'Cake', description: 'Chocolate cake', course: 'Desserts', price: 7.99 },
-  { dishName: 'Soup', description: 'Tomato soup', course: 'Starters', price: 4.99 },
+  { dishName: 'Soup', description: 'Tomato soup', course: 'Starters', price: 3.99 },
 ];
 
 const courses = ['All', 'Starters', 'Mains', 'Desserts'];
@@ -40,7 +40,11 @@ export default function FilterMenuScreen({ navigation }: FilterMenuScreenProps) 
       <Text style={styles.title}>Filter Menu</Text>
 
       <Text style={styles.label}>Select Course:</Text>
-      <Picker selectedValue={selectedCourse} onValueChange={setSelectedCourse} style={styles.picker}>
+      <Picker
+        selectedValue={selectedCourse}
+        onValueChange={setSelectedCourse}
+        style={styles.picker}
+      >
         {courses.map(course => (
           <Picker.Item key={course} label={course} value={course} />
         ))}
@@ -55,7 +59,9 @@ export default function FilterMenuScreen({ navigation }: FilterMenuScreenProps) 
         keyboardType="numeric"
       />
 
-      <Button title="Apply Filter" onPress={handleFilter} />
+      <View style={styles.buttonContainer}>
+        <Button title="Apply Filter" onPress={handleFilter} color="#27ae60" />
+      </View>
 
       <FlatList
         data={filteredMenu}
@@ -78,35 +84,52 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    backgroundColor: '#f8f8f8',
   },
   title: {
     fontSize: 24,
+    fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
+    color: '#2c3e50',
   },
   label: {
     fontSize: 18,
     marginVertical: 8,
+    color: '#34495e',
   },
   picker: {
     borderWidth: 1,
+    borderColor: '#ccc',
     borderRadius: 5,
-    marginBottom: 10,
+    backgroundColor: '#fff',
+    marginBottom: 15,
   },
   input: {
     borderWidth: 1,
-    padding: 8,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 10,
+    backgroundColor: '#fff',
+    marginBottom: 15,
+  },
+  buttonContainer: {
+    marginBottom: 20,
+    alignSelf: 'center',
+  },
+  itemContainer: {
+    padding: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    backgroundColor: '#fff',
     borderRadius: 5,
     marginBottom: 10,
   },
-  itemContainer: {
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-  },
   itemTitle: {
-    fontWeight: 'bold',
     fontSize: 18,
+    fontWeight: 'bold',
+    color: '#2c3e50',
+    marginBottom: 5,
   },
   noResult: {
     textAlign: 'center',
@@ -115,3 +138,4 @@ const styles = StyleSheet.create({
     color: 'gray',
   },
 });
+ 
