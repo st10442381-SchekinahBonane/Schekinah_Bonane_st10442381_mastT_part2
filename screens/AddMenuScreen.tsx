@@ -1,110 +1,87 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from './types';
-
-const courses = ['Starters', 'Mains', 'Desserts'];
+import { RootStackParamList } from '../types';
 
 type AddMenuScreenProps = NativeStackScreenProps<RootStackParamList, 'AddMenu'>;
 
-export default function AddMenuScreen({ navigation }: AddMenuScreenProps) {
+const AddMenuScreen: React.FC<AddMenuScreenProps> = ({ navigation }) => {
   const [dishName, setDishName] = useState('');
   const [description, setDescription] = useState('');
-  const [course, setCourse] = useState(courses[0]);
+  const [course, setCourse] = useState('');
   const [price, setPrice] = useState('');
 
-  const handleSubmit = () => {
-    const newItem = { dishName, description, course, price: parseFloat(price) };
-
-    if (dishName && description && course && price) {
-      navigation.navigate('Home', { newItem });
-    } else {
-      Alert.alert('Invalid Input', 'Please fill in all fields correctly.');
+  const handleAddItem = () => {
+    if (!dishName || !description || !course || !price) {
+      Alert.alert('Error', 'All fields are required!');
+      return;
     }
+
+    const newItem = {
+      dishName,
+      description,
+      course,
+      price: parseFloat(price),
+    };
+
+    // Navigate back to Home screen with the new item
+    navigation.navigate('Home', { newItem });
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Add a New Dish</Text>
-
-      <Text style={styles.label}>Dish Name:</Text>
+      <Text style={styles.title}>Add New Menu Item</Text>
       <TextInput
-        style={styles.input} 
-        onChangeText={setDishName}
+        style={styles.input}
+        placeholder="Dish Name"
         value={dishName}
-        placeholder="Enter dish name"
+        onChangeText={setDishName}
       />
-
-      <Text style={styles.label}>Description:</Text>
       <TextInput
         style={styles.input}
-        onChangeText={setDescription}
+        placeholder="Description"
         value={description}
-        placeholder="Enter dish description"
+        onChangeText={setDescription}
       />
-
-      <Text style={styles.label}>Course:</Text>
-      <Picker
-        selectedValue={course}
-        onValueChange={(itemValue) => setCourse(itemValue)}
-        style={styles.picker}
-      >
-        {courses.map((course) => (
-          <Picker.Item key={course} label={course} value={course} />
-        ))}
-      </Picker>
-
-      <Text style={styles.label}>Price:</Text>
       <TextInput
         style={styles.input}
-        onChangeText={setPrice}
-        value={price}
-        keyboardType="numeric"
-        placeholder="e.g. 19.99"
+        placeholder="Course (e.g., Starter, Main, Dessert)"
+        value={course}
+        onChangeText={setCourse}
       />
-
-      <View style={styles.buttonContainer}>
-        <Button title="Add Dish" onPress={handleSubmit} color="#2980b9" />
-      </View>
+      <TextInput
+        style={styles.input}
+        placeholder="Price"
+        value={price}
+        onChangeText={setPrice}
+        keyboardType="numeric"
+      />
+      <Button title="Add Item" onPress={handleAddItem} />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     padding: 20,
-    backgroundColor: '#f4f4f4',
   },
   title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#2c3e50',
-    textAlign: 'center',
+    fontSize: 24,
     marginBottom: 20,
-  },
-  label: {
-    fontSize: 18,
-    marginVertical: 10,
-    color: '#34495e',
+    fontWeight: 'bold',
   },
   input: {
+    width: '100%',
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#ddd',
     borderRadius: 5,
     padding: 10,
-    backgroundColor: '#fff',
     marginBottom: 15,
-  },
-  picker: {
-    marginBottom: 15,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    backgroundColor: '#fff',
-  },
-  buttonContainer: {
-    marginTop: 20,
+    fontSize: 16,
   },
 });
+
+export default AddMenuScreen;

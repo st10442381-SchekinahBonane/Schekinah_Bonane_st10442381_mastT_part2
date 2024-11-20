@@ -1,49 +1,59 @@
+// screens/HomeScreen.tsx
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, FlatList, StyleSheet } from 'react-native';
+import { View, Text, Button, FlatList, StyleSheet, Alert } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from './types';
+import { RootStackParamList } from '../types';
 
 type HomeScreenProps = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
 export default function HomeScreen({ navigation, route }: HomeScreenProps) {
-  const [menuItems, setMenuItems] = useState<Array<{ dishName: string, description: string, course: string, price: number }>>([]);
+  const [menuItems, setMenuItems] = useState<{ dishName: string; description: string; course: string; price: number }[]>([]);
+  
+  // Calculate average price
+  const averagePrice = menuItems.length > 0 
+    ? menuItems.reduce((sum, item) => sum + item.price, 0) / menuItems.length 
+    : 0;
 
+  // Handle removal of a menu item
+  const removeItem = (index: number) => {
+    Alert.alert(
+      "Remove Item",
+      "Are you sure you want to remove this item?",
+      [
+        { text: "Cancel", style: "cancel" },
+        { text: "OK", onPress: () => setMenuItems(menuItems.filter((_, i) => i !== index)) }
+      ]
+    );
+  };
+
+  // Check if newItem exists in route.params and add it to the menu
   useEffect(() => {
     if (route.params?.newItem) {
-      setMenuItems((prevItems) => [...prevItems, route.params.newItem!]);
+      setMenuItems((prevItems) => [...prevItems, route.params.newItem as { dishName: string; description: string; course: string; price: number }]);
     }
   }, [route.params?.newItem]);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Christoffel’s Menu</Text>
+      <Text style={styles.title}>Chef's Menu</Text>
+      <Button title="Add Menu" onPress={() => navigation.navigate('AddMenu')} />
+      <Button title="Filter Menu" onPress={() => navigation.navigate('FilterMenu', { menuItems })} />
+      
+      <Text style={styles.totalItems}>Total Items: {menuItems.length}</Text>
+      <Text style={styles.averagePrice}>Average Price: ${averagePrice.toFixed(2)}</Text>
 
-      {/* Total number of menu items */}
-      <Text style={styles.menuCount}>Total Menu Items: {menuItems.length}</Text>
-
-      {/* Display the menu list */}
       <FlatList
         data={menuItems}
         keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item }) => (
+        renderItem={({ item, index }) => (
           <View style={styles.menuItem}>
-            {item && (
-              <Text style={styles.itemText}>
-                {item.dishName} - {item.course} - ${item.price.toFixed(2)}
-              </Text>
-            )}
+            <Text style={styles.dishName}>{item.dishName} - {item.course}</Text>
+            <Text>{item.description}</Text>
+            <Text>${item.price.toFixed(2)}</Text>
+            <Button title="Remove" color="red" onPress={() => removeItem(index)} />
           </View>
         )}
       />
-
-      {/* Button to navigate to Add Dish screen */}
-      <View style={styles.buttonContainer}>
-        <Button
-          title="Add New Dish"
-          onPress={() => navigation.navigate('AddMenu')}
-          color="#2980b9"
-        />
-      </View>
     </View>
   );
 }
@@ -51,37 +61,29 @@ export default function HomeScreen({ navigation, route }: HomeScreenProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     padding: 20,
-    backgroundColor: '#f7f7f7', // Subtle background color for better UI
   },
   title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    color: '#2c3e50',
+    fontSize: 24,
     marginBottom: 20,
   },
-  menuCount: {
+  totalItems: {
     fontSize: 18,
-    color: '#7f8c8d',
-    marginVertical: 10,
-    textAlign: 'center',
+    marginTop: 10,
+  },
+  averagePrice: {
+    fontSize: 18,
+    marginBottom: 20,
   },
   menuItem: {
-    padding: 12,
-    marginVertical: 8,
-    borderWidth: 1,
-    borderColor: '#dcdcdc',
-    borderRadius: 8,
-    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    paddingVertical: 10,
+    width: '100%',
   },
-  itemText: {
+  dishName: {
     fontSize: 16,
-    color: '#34495e',
-  },
-  buttonContainer: {
-    marginVertical: 20,
-    alignItems: 'center',
+    fontWeight: 'bold',
   },
 });
-
