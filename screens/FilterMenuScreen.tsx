@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, FlatList, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from './types';
+import { RootStackParamList } from 'types';
 
 type FilterMenuScreenProps = NativeStackScreenProps<RootStackParamList, 'FilterMenu'>;
 
