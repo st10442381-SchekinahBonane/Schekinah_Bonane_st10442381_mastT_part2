@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
-import { RootStackScreenProps } from '../types';
+import { RootStackScreenProps } from './types';
  
 // Sample menu items for demonstration
 const menuItems = [

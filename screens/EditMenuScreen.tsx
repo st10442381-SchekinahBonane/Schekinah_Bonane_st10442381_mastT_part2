@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, FlatList, Text, Button, StyleSheet, Alert } from 'react-native';
-import { RootStackScreenProps } from '../types';
+import { RootStackScreenProps } from './types';
 
 const initialMenuItems = [
   { id: '1', dishName: 'Spaghetti', course: 'Main', price: 12.99 },

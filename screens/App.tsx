@@ -6,7 +6,7 @@ import AddMenuScreen from './AddMenuScreen';
 import EditMenuScreen from './EditMenuScreen';
 import PasscodeScreen from './PasscodeScreen';
 import FilterMenuScreen from './FilterMenuScreen';
-import { RootStackParamList } from './types';
+import { RootStackParamList } from '../types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, StyleSheet, Alert } from 'react-native';
-import { RootStackScreenProps } from '../types';
+import { RootStackScreenProps } from './types';
 
 export default function AddMenuScreen({ navigation }: RootStackScreenProps<'AddMenu'>) {
   const [dishName, setDishName] = useState('');
