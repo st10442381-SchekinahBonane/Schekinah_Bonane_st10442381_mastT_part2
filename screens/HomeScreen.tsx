@@ -1,57 +1,47 @@
-// screens/HomeScreen.tsx
-import React, { useState, useEffect } from 'react';
-import { View, Text, Button, FlatList, StyleSheet, Alert } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../types';
+import React from 'react';
+import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { RootStackScreenProps } from '../types';
+ 
+// Sample menu items for demonstration
+const menuItems = [
+  { dishName: 'Spaghetti', course: 'Main', price: 12.99 },
+  { dishName: 'Salad', course: 'Starter', price: 6.99 },
+  { dishName: 'Brownie', course: 'Dessert', price: 4.99 },
+  { dishName: 'Steak', course: 'Main', price: 19.99 },
+];
 
-type HomeScreenProps = NativeStackScreenProps<RootStackParamList, 'Home'>;
+// Calculate average price by course
+const calculateAveragePrices = (items: typeof menuItems) => {
+  const courseGroups: { [key: string]: number[] } = {};
 
-export default function HomeScreen({ navigation, route }: HomeScreenProps) {
-  const [menuItems, setMenuItems] = useState<{ dishName: string; description: string; course: string; price: number }[]>([]);
-  
-  // Calculate average price
-  const averagePrice = menuItems.length > 0 
-    ? menuItems.reduce((sum, item) => sum + item.price, 0) / menuItems.length 
-    : 0;
-
-  // Handle removal of a menu item
-  const removeItem = (index: number) => {
-    Alert.alert(
-      "Remove Item",
-      "Are you sure you want to remove this item?",
-      [
-        { text: "Cancel", style: "cancel" },
-        { text: "OK", onPress: () => setMenuItems(menuItems.filter((_, i) => i !== index)) }
-      ]
-    );
-  };
-
-  // Check if newItem exists in route.params and add it to the menu
-  useEffect(() => {
-    if (route.params?.newItem) {
-      setMenuItems((prevItems) => [...prevItems, route.params.newItem as { dishName: string; description: string; course: string; price: number }]);
+  items.forEach((item) => {
+    if (!courseGroups[item.course]) {
+      courseGroups[item.course] = [];
     }
-  }, [route.params?.newItem]);
+    courseGroups[item.course].push(item.price);
+  });
+
+  const averages = Object.entries(courseGroups).map(([course, prices]) => {
+    const average = prices.reduce((sum, price) => sum + price, 0) / prices.length;
+    return { course, average: average.toFixed(2) };
+  });
+
+  return averages;
+};
+
+export default function HomeScreen() {
+  const averagePrices = calculateAveragePrices(menuItems);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Chef's Menu</Text>
-      <Button title="Add Menu" onPress={() => navigation.navigate('AddMenu')} />
-      <Button title="Filter Menu" onPress={() => navigation.navigate('FilterMenu', { menuItems })} />
-      
-      <Text style={styles.totalItems}>Total Items: {menuItems.length}</Text>
-      <Text style={styles.averagePrice}>Average Price: ${averagePrice.toFixed(2)}</Text>
-
+      <Text style={styles.header}>Average Prices by Course:</Text>
       <FlatList
-        data={menuItems}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item, index }) => (
-          <View style={styles.menuItem}>
-            <Text style={styles.dishName}>{item.dishName} - {item.course}</Text>
-            <Text>{item.description}</Text>
-            <Text>${item.price.toFixed(2)}</Text>
-            <Button title="Remove" color="red" onPress={() => removeItem(index)} />
-          </View>
+        data={averagePrices}
+        keyExtractor={(item) => item.course}
+        renderItem={({ item }) => (
+          <Text style={styles.text}>
+            {item.course}: ${item.average}
+          </Text>
         )}
       />
     </View>
@@ -63,27 +53,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+    backgroundColor: '#fff',
   },
-  title: {
-    fontSize: 24,
-    marginBottom: 20,
-  },
-  totalItems: {
-    fontSize: 18,
-    marginTop: 10,
-  },
-  averagePrice: {
-    fontSize: 18,
-    marginBottom: 20,
-  },
-  menuItem: {
-    borderBottomWidth: 1,
-    paddingVertical: 10,
-    width: '100%',
-  },
-  dishName: {
-    fontSize: 16,
+  header: {
+    fontSize: 20,
     fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  text: {
+    fontSize: 16,
   },
 });

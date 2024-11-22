@@ -1,87 +1,66 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../types';
+import { View, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { RootStackScreenProps } from '../types';
 
-type AddMenuScreenProps = NativeStackScreenProps<RootStackParamList, 'AddMenu'>;
-
-const AddMenuScreen: React.FC<AddMenuScreenProps> = ({ navigation }) => {
+export default function AddMenuScreen({ navigation }: RootStackScreenProps<'AddMenu'>) {
   const [dishName, setDishName] = useState('');
-  const [description, setDescription] = useState('');
-  const [course, setCourse] = useState('');
   const [price, setPrice] = useState('');
+  const [course, setCourse] = useState('');
 
   const handleAddItem = () => {
-    if (!dishName || !description || !course || !price) {
+    if (!dishName || !price || !course) {
       Alert.alert('Error', 'All fields are required!');
       return;
     }
 
-    const newItem = {
-      dishName,
-      description,
-      course,
-      price: parseFloat(price),
-    };
+    if (isNaN(parseFloat(price))) {
+      Alert.alert('Error', 'Price must be a valid number!');
+      return;
+    }
 
-    // Navigate back to Home screen with the new item
-    navigation.navigate('Home', { newItem });
+    Alert.alert('Success', `Added ${dishName} to the menu!`);
+    setDishName('');
+    setPrice('');
+    setCourse('');
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Add New Menu Item</Text>
       <TextInput
-        style={styles.input}
         placeholder="Dish Name"
         value={dishName}
         onChangeText={setDishName}
+        style={styles.input}
       />
       <TextInput
-        style={styles.input}
-        placeholder="Description"
-        value={description}
-        onChangeText={setDescription}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Course (e.g., Starter, Main, Dessert)"
-        value={course}
-        onChangeText={setCourse}
-      />
-      <TextInput
-        style={styles.input}
         placeholder="Price"
         value={price}
         onChangeText={setPrice}
         keyboardType="numeric"
+        style={styles.input}
+      />
+      <TextInput
+        placeholder="Course (e.g., Starter, Main, Dessert)"
+        value={course}
+        onChangeText={setCourse}
+        style={styles.input}
       />
       <Button title="Add Item" onPress={handleAddItem} />
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
     padding: 20,
   },
-  title: {
-    fontSize: 24,
-    marginBottom: 20,
-    fontWeight: 'bold',
-  },
   input: {
-    width: '100%',
+    height: 40,
+    borderColor: '#ccc',
     borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 15,
-    fontSize: 16,
+    marginBottom: 10,
+    paddingHorizontal: 10,
   },
 });
-
-export default AddMenuScreen;

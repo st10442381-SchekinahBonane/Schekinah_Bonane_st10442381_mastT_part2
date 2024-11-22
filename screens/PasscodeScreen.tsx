@@ -1,39 +1,43 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from 'types';
+import { View, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { RootStackScreenProps } from '../types';
 
-type PasscodeScreenProps = NativeStackScreenProps<RootStackParamList, 'Passcode'>;
-
-export default function PasscodeScreen({ navigation }: PasscodeScreenProps) {
+export default function PasscodeScreen({ navigation }: RootStackScreenProps<'Passcode'>) {
   const [passcode, setPasscode] = useState('');
 
-  const handleAccess = () => {
-    if (passcode === '2468') {
-      navigation.navigate('EditMenu'); // Corrected navigation here
+  const handlePasscode = () => {
+    if (passcode === '1234') {
+      navigation.navigate('EditMenu');
     } else {
-      Alert.alert('Access Denied', 'Incorrect passcode!');
+      Alert.alert('Error', 'Incorrect passcode!');
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Enter Passcode</Text>
       <TextInput
-        style={styles.input}
         placeholder="Enter Passcode"
         value={passcode}
         onChangeText={setPasscode}
         secureTextEntry
-        keyboardType="numeric"
+        style={styles.input}
       />
-      <Button title="Submit" onPress={handleAccess} />
+      <Button title="Submit" onPress={handlePasscode} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 },
-  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 20 },
-  input: { width: '80%', borderWidth: 1, padding: 10, marginBottom: 20, borderRadius: 5, textAlign: 'center' },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20,
+  },
+  input: {
+    height: 40,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    marginBottom: 10,
+    paddingHorizontal: 10,
+  },
 });

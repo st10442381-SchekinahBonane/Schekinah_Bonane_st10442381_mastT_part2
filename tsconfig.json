@@ -7,5 +7,9 @@
     "moduleResolution": "node",
     "allowJs": false
   },
-  "include": ["src/**/*", "types.ts"] // Adjust this if necessary
+  "include": [
+    "src/**/*",
+    "types.ts"
+  ],
+  "extends": "expo/tsconfig.base"
 }
